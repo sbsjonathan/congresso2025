@@ -1,0 +1,37 @@
+/* ================================
+   🔹 Caixa de Anotações (Notas)
+   ================================ */
+textarea {
+    width: 100%;
+    max-width: calc(100% - 20px);
+    padding: 8px;
+    font-size: calc(var(--tamanho-topico) * 0.9);
+    border: 1px solid var(--text-gray);
+    border-radius: 5px;
+    resize: none;
+    overflow: hidden;
+    margin-top: 10px;
+    display: none;
+    height: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    box-shadow: 0 0 3px var(--highlight-color);
+    min-height: 1em;
+}
+
+textarea.show {
+    display: block;
+    opacity: 1;
+    transform: scale(1);
+    height: auto;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--highlight-color);
+    box-shadow: 0 0 8px var(--highlight-color);
+}

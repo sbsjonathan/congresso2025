@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <!-- META VIEWPORT PARA AJUSTAR A TELA DO CELULAR -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Minhas memórias do congresso 2025 – ADORAÇÃO PURA</title>
+  <style>
+    /* só scroll vertical, padding reduzido no topo para subir o título */
+    html, body {
+      margin: 0;
+      padding: 0.5rem 1rem 1rem;  /* topo menor, laterais iguais */
+      width: 100vw;
+      max-width: 100%;
+      box-sizing: border-box;
+      background: #f0f0f0;
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* título principal maior, linhas espaçadas e sem margem superior */
+    h1 {
+      text-align: center;
+      font-size: 20px;     /* um pouco maior */
+      line-height: 1.5;    /* maior espaçamento entre as linhas */
+      margin: 0 0 1.5rem;  /* sem margem em cima, apenas embaixo */
+      user-select: none;   /* evita seleção ao duplo-clique */
+      cursor: default;
+    }
+
+    .slot {
+      width: 90%;
+      max-width: 380px;
+      margin: 0 auto 2rem;
+      background: #fff;
+      /* borda superior e laterais mais grossas, inferior fina */
+      border-style: solid;
+      border-width: 2px 2px 1px;
+      border-color: #ccc;
+      border-radius: 8px;
+      transition: transform 0.3s;
+      overflow: hidden;
+      padding: 0.8rem;       /* moldura branca interna */
+    }
+
+    /* rotações divertidas */
+    .slot:nth-of-type(1) { transform: rotate(-2deg); }
+    .slot:nth-of-type(2) { transform: rotate( 1.5deg); }
+    .slot:nth-of-type(3) { transform: rotate(-1deg); }
+
+    .preview {
+      width: 100%;
+      background: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      cursor: pointer; /* toca para escolher foto */
+    }
+
+    .preview img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* legenda estilo “Polaroid” */
+    .caption {
+      height: 50px;
+      line-height: 60px;         /* mesma altura do container */
+      padding: 0;
+      text-align: center;
+      font-weight: bold;
+      font-size: 25px;
+      background: #fff;
+      border-top: 1px solid #eee;
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* botão de deletar oculto por padrão */
+    .delete-btn {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%) translateY(-10px);
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 0.3rem 0.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    /* quando visível */
+    .delete-btn.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(-50%) translateY(0);
+    }
+
+    /* input escondido */
+    input[type="file"] {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>
+    Minhas memórias do congresso 2025<br>
+    ADORAÇÃO PURA
+  </h1>
+
+  <div class="slot" data-id="1">
+    <div class="preview">Sem foto</div>
+    <div class="caption">Sexta
+      <button class="delete-btn">🗑️</button>
+    </div>
+    <input type="file" accept="image/*">
+  </div>
+
+  <div class="slot" data-id="2">
+    <div class="preview">Sem foto</div>
+    <div class="caption">Sábado
+      <button class="delete-btn">🗑️</button>
+    </div>
+    <input type="file" accept="image/*">
+  </div>
+
+  <div class="slot" data-id="3">
+    <div class="preview">Sem foto</div>
+    <div class="caption">Domingo
+      <button class="delete-btn">🗑️</button>
+    </div>
+    <input type="file" accept="image/*">
+  </div>
+
+  <script>
+  (function(){
+    // —— Duplo-clique no título volta ao index.html —— 
+    const título = document.querySelector("h1");
+    título.addEventListener("dblclick", () => {
+      window.location.href = "index.html";
+    });
+
+    // —— IndexedDB de imagens —— 
+    const DB_NAME = 'fotosDB';
+    const STORE_NAME = 'imagens';
+    let db;
+
+    // abre/cria IndexedDB
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = e => {
+      e.target.result.createObjectStore(STORE_NAME, { keyPath: 'id' });
+    };
+    req.onsuccess = e => {
+      db = e.target.result;
+      loadAllSlots();
+    };
+    req.onerror = e => console.error('Erro ao abrir DB:', e);
+
+    // carrega todas as fotos
+    function loadAllSlots() {
+      const tx = db.transaction(STORE_NAME, 'readonly');
+      const store = tx.objectStore(STORE_NAME);
+      store.openCursor().onsuccess = e => {
+        const cursor = e.target.result;
+        if (!cursor) return;
+        renderSlot(cursor.value.id, cursor.value.blob);
+        cursor.continue();
+      };
+    }
+
+    // renderiza imagem ou "Sem foto"
+    function renderSlot(id, blob) {
+      const slot    = document.querySelector(`.slot[data-id="${id}"]`);
+      const preview = slot.querySelector('.preview');
+      preview.innerHTML = '';
+      if (blob) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(blob);
+        preview.appendChild(img);
+      } else {
+        preview.textContent = 'Sem foto';
+      }
+    }
+
+    // salva blob no IndexedDB
+    function saveBlob(id, blob) {
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      tx.objectStore(STORE_NAME).put({ id, blob, updated: Date.now() });
+      tx.oncomplete = () => renderSlot(id, blob);
+      tx.onerror    = e => console.error('Erro ao salvar:', e);
+    }
+
+    // deleta blob do IndexedDB
+    function deleteSlot(id) {
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      tx.objectStore(STORE_NAME).delete(id);
+      tx.oncomplete = () => renderSlot(id, null);
+      tx.onerror    = e => console.error('Erro ao deletar:', e);
+    }
+
+    // configura eventos
+    document.querySelectorAll('.slot').forEach(slot => {
+      const id      = Number(slot.dataset.id);
+      const input   = slot.querySelector('input[type="file"]');
+      const preview = slot.querySelector('.preview');
+      const caption = slot.querySelector('.caption');
+      const btn     = slot.querySelector('.delete-btn');
+      let hideTimer = null;
+
+      // tocar na foto: abre seletor
+      preview.addEventListener('click', () => input.click());
+
+      // ao escolher foto
+      input.addEventListener('change', ev => {
+        const file = ev.target.files[0];
+        if (file) saveBlob(id, file);
+      });
+
+      // tocar na legenda: revela botão de delete
+      caption.addEventListener('click', () => {
+        btn.classList.add('visible');
+        if (hideTimer) clearTimeout(hideTimer);
+        hideTimer = setTimeout(() => {
+          btn.classList.remove('visible');
+        }, 5000);
+      });
+
+      // ao clicar em deletar
+      btn.addEventListener('click', () => {
+        deleteSlot(id);
+        btn.classList.remove('visible');
+        if (hideTimer) clearTimeout(hideTimer);
+      });
+    });
+  })();
+  </script>
+</body>
+</html>

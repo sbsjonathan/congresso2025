@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Congresso 2025</title>
+  <link rel="stylesheet" href="index-style.css">
+</head>
+<body data-dia="index">
+
+  <!-- 🔥 Fundo -->
+  <div class="papel-de-parede"></div>
+
+  <!-- ☁️ Nuvens -->
+  <div id="cloud">
+    <div id="cloud_layer1"></div>
+    <div id="cloud_layer2"></div>
+  </div>
+
+  <!-- ☀️ Raios solares -->
+  <div id="sun">
+    <div id="sun_layer1"></div>
+    <div id="sun_layer2"></div>
+    <div id="sun_layer3"></div>
+  </div>
+
+  <!-- 🔥 Partículas -->
+  <div class="particulas">
+    <div></div>
+    <div></div>
+  </div>
+
+  <!-- 🔥 Botões -->
+  <div class="container">
+    <nav class="menu">
+      <a href="sexta.html"   class="btn">Sexta-feira</a>
+      <a href="sabado.html"  class="btn">Sábado</a>
+      <a href="domingo.html" class="btn">Domingo</a>
+      <a href="fotos.html"   class="btn">Outros</a>
+    </nav>
+  </div>
+
+  <!-- Registro do Service Worker -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("/sw.js")
+          .catch(err => console.error("Service Worker falhou:", err));
+      });
+    }
+  </script>
+</body>
+</html>

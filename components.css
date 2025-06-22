@@ -1,0 +1,150 @@
+/* ================================
+   🔹 LINHAS DIVISÓRIAS PERSONALIZADAS
+   ================================ */
+.divisoria-superior, .divisoria-inferior {
+    width: 100%;
+    height: 1px;
+    background-color: var(--text-gray);
+}
+
+.divisoria-superior {
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+.divisoria-inferior {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+/* ================================
+   🔹 BOTÕES DE NAVEGAÇÃO (PRÓXIMO / ANTERIOR)
+   ================================ */
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.nav-btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--highlight-color);
+    color: #fff;
+    border: none;
+    padding: 0.5em 1em;
+    cursor: pointer;
+    font-family: sans-serif;
+    font-size: 16px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.nav-btn.anterior {
+    justify-content: flex-start;
+}
+
+.nav-btn.proximo {
+    justify-content: flex-end;
+}
+
+.nav-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+.nav-btn.anterior svg {
+    margin-right: 8px;
+}
+
+.nav-btn.proximo svg {
+    margin-left: 8px;
+}
+
+.nav-btn.desativado {
+    background-color: #999;
+    cursor: not-allowed;
+    opacity: 0.6;
+    color: white;
+}
+
+.nav-btn.desativado svg path {
+    stroke: white !important;
+}
+
+/* ================================
+   🔹 Menu Ocultável
+   ================================ */
+.menu-container {
+    display: none;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transition: opacity 0.4s ease-in-out, height 0.4s ease-in-out;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.menu-visible {
+    display: flex;
+    opacity: 1;
+    height: auto;
+}
+
+/* ================================
+   🔹 Botão de Limpar Cache
+   ================================ */
+#clear-cache {
+    padding: 8px 12px;
+    border: none;
+    background-color: #c70000;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#clear-cache:hover {
+    background-color: #a00000;
+}
+
+/* ================================
+   🔹 Destaques no Horário
+   ================================ */
+.schedule li strong.ativo {
+    position: relative;
+}
+
+.schedule li strong.ativo::before {
+    content: "•";
+    position: absolute;
+    left: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.9em;
+    color: var(--highlight-color);
+}
+
+/* ================================
+   🔹 Sublinhado tracejado no item ativo
+   ================================ */
+.schedule li.ativo-line > .clickable,
+.schedule li.ativo-line > .topico {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-color: #555;
+    text-underline-offset: 2px;
+}
+
+/* ================================
+   🔹 Banner do Topo
+   ================================ */
+.banner-topo {
+    width: 100vw;
+    max-width: 100%;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
